@@ -25,17 +25,17 @@ describe('server', () => {
             })
         });
 
-        it('should add a force user to db', async function() {
+        it('should add a force user to db and return the added user', async function() {
             const forceUser = 'Darth Vader';
             const existing = await db('force-users').where({name: forceUser});
             expect(existing).toHaveLength(0)
             await request(server).post('/force-users')
-            .send({name: hobbitName})
+            .send({name: forceUser})
             .then(res => {
-                expect(res.body.message).toBe("Hobbit created successfully");
+                expect(res.body).toMatchObject({name: forceUser});
             })
 
-            const inserted = await db('hobbits').where({name: hobbitName});
+            const inserted = await db('force-users').where({name: forceUser});
             expect(inserted).toHaveLength(1)
         });
     });

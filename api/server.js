@@ -14,9 +14,11 @@ server.get("/force-users", (req, res) => {
 
 server.post("/force-users", (req, res) => {
     const forceUser = req.body
-    db('force-users').insert(forceUser)
+    // return res.status(200).json(forceUser);
+    return db('force-users').insert(forceUser)
     .then(sensitive => {
-      res.status(201).json();
+        console.log('promise', forceUser)
+      res.status(201).json(forceUser);
     })
     .catch(error => {
       res.status(500).json(error);
