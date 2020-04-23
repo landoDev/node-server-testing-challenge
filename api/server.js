@@ -9,7 +9,10 @@ server.get("/", (req, res) => {
 });
 
 server.get("/force-users", (req, res) => {
-    // if time
+    return db('force-users')
+    .then(users =>{
+        res.status(200).json(users)
+    });
 });
 
 server.post("/force-users", (req, res) => {
@@ -26,15 +29,14 @@ server.post("/force-users", (req, res) => {
 });
 
 server.delete("/force-users/:id", (req, res) => {
-    // const hobbitInfo = req.body;
-  
-    // Hobbits.(hobbitInfo)
-    //   .then(hobbits => {
-    //     res.status(201).json({ message: 'Hobbit created successfully'});
-    //   })
-    //   .catch(error => {
-    //     res.status(500).json(error);
-    //   });
+    const { id } = req.params;
+    return db('force-users').where({ id }).del()
+    .then(deleted=>{
+        res.status(204).json({removed: deleted})
+    })
+    .catch(error => {
+        res.status(500).json(error);
+    });
 });
 
 module.exports = server;

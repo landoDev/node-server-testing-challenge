@@ -40,19 +40,15 @@ describe('server', () => {
         });
     });
 
-    describe("DELETE /force-users", () => {
-        beforeEach(async () =>{
-            await db('hobbits').truncate()
-        })
-        it('should return 201 on success', () => {
-            return request(server).post('/force-users')
-            .send({name: 'Darth Vader'})
+    describe("DELETE /force-users", async () => {
+        it('should return 204 on successful delete', () => {
+            return request(server).delete('/force-users/:id')
             .then(res => {
-                expect(res.status).toBe(201);
+                expect(res.status).toBe(204);
             })
         });
 
-        it('should add a force user to db', async function() {
+        it('should remove a force user to db', async function() {
             const hobbitName = 'gaffer';
             const existing = await db('hobbits').where({name: hobbitName});
             expect(existing).toHaveLength(0)
