@@ -1,0 +1,69 @@
+const request = require('supertest')
+
+const server = require('./server');
+const db = require('../data/dbConfig')
+
+describe('server', () => {
+    describe('GET /', () => {
+        it('should return 200 OK', () => {
+            return request(server).get('/') 
+            .then(res => {
+                expect(res.status).toBe(200)
+            })
+        })
+    });
+
+    describe("POST /force-users", () => {
+        beforeEach(async () =>{
+            await db('force-users').truncate()
+        })
+        it('should return 201 on success', () => {
+            return request(server).post('/force-users')
+            .send({name: 'Darth Vader'})
+            .then(res => {
+                expect(res.status).toBe(201);
+            })
+        });
+
+        it('should add a force user to db', async function() {
+            const forceUser = 'Darth Vader';
+            const existing = await db('force-users').where({name: forceUser});
+            expect(existing).toHaveLength(0)
+            await request(server).post('/force-users')
+            .send({name: hobbitName})
+            .then(res => {
+                expect(res.body.message).toBe("Hobbit created successfully");
+            })
+
+            const inserted = await db('hobbits').where({name: hobbitName});
+            expect(inserted).toHaveLength(1)
+        });
+    });
+
+    describe("DELETE /force-users", () => {
+        beforeEach(async () =>{
+            await db('hobbits').truncate()
+        })
+        it('should return 201 on success', () => {
+            return request(server).post('/force-users')
+            .send({name: 'Darth Vader'})
+            .then(res => {
+                expect(res.status).toBe(201);
+            })
+        });
+
+        it('should add a force user to db', async function() {
+            const hobbitName = 'gaffer';
+            const existing = await db('hobbits').where({name: hobbitName});
+            expect(existing).toHaveLength(0)
+            await request(server).post('/hobbits')
+            .send({name: hobbitName})
+            .then(res => {
+                expect(res.body.message).toBe("Hobbit created successfully");
+            })
+
+            const inserted = await db('hobbits').where({name: hobbitName});
+            expect(inserted).toHaveLength(1)
+        });
+    });
+});
