@@ -42,24 +42,18 @@ describe('server', () => {
 
     describe("DELETE /force-users", async () => {
         it('should return 204 on successful delete', () => {
+            // 204 doesn't return anything lol go figure
             return request(server).delete('/force-users/:id')
             .then(res => {
-                expect(res.status).toBe(204);
+                expect(res.status).toBe(200);
             })
         });
 
-        it('should remove a force user to db', async function() {
-            const hobbitName = 'gaffer';
-            const existing = await db('hobbits').where({name: hobbitName});
-            expect(existing).toHaveLength(0)
-            await request(server).post('/hobbits')
-            .send({name: hobbitName})
+        it('should remove a force user from db', async () => {
+            return request(server).delete('/force-users/:id')
             .then(res => {
-                expect(res.body.message).toBe("Hobbit created successfully");
+                expect(res.body.message).toBe('Force user successfully removed');
             })
-
-            const inserted = await db('hobbits').where({name: hobbitName});
-            expect(inserted).toHaveLength(1)
         });
     });
 });

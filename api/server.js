@@ -32,7 +32,7 @@ server.delete("/force-users/:id", (req, res) => {
     const { id } = req.params;
     return db('force-users').where({ id }).del()
     .then(deleted=>{
-        res.status(204).json({removed: deleted})
+        res.status(200).json({message: 'Force user successfully removed'});
     })
     .catch(error => {
         res.status(500).json(error);
