@@ -13,6 +13,22 @@ describe('server', () => {
         })
     });
 
+    describe('GET /force-users', () => {
+        it('should return 200 OK', () => {
+            return request(server).get('/force-users') 
+            .then(res => {
+                expect(res.status).toBe(200)
+            })
+        })
+        it('should return an array of users', () => {
+            const expected = [{ id: 1, name: 'Darth Vader'}]
+            return request(server).get('/force-users') 
+            .then(res => {
+                expect(res.body).toEqual(expect.arrayContaining(expected))
+            })
+        })
+    });
+
     describe("POST /force-users", () => {
         beforeEach(async () =>{
             await db('force-users').truncate()
